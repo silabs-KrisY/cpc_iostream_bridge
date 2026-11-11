@@ -133,7 +133,8 @@ static void *cpc_to_socket(void *arg)
   bridge_args_t *a = arg;
   while (!stopping) {
     uint8_t cpc_tx_buf[SL_CPC_READ_MINIMUM_SIZE];
-    nb_bytes = cpc_read_endpoint(a->endpoint, cpc_tx_buf, SL_CPC_READ_MINIMUM_SIZE, CPC_ENDPOINT_EVENT_FLAG_NON_BLOCKING);
+    nb_bytes = cpc_read_endpoint(a->endpoint, cpc_tx_buf, SL_CPC_READ_MINIMUM_SIZE, 
+	CPC_ENDPOINT_READ_FLAG_NONE);
     if (verbose && nb_bytes > 0) {
       fprintf(stderr, "BRIDGE: CPC -> TCP: %u bytes\n", nb_bytes);
     }
