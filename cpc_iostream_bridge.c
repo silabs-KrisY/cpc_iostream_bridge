@@ -91,12 +91,12 @@ static void log_msg(const char *message)
  * @return          0 on success, -1 on failure (with errno set).
  */
 int send_all(int socket_fd, const void *buffer, ssize_t *length) {
-    size_t total_sent = 0;        // How many bytes we've sent so far
-    size_t bytes_left = *length;  // How many bytes we have left to send
+    ssize_t total_sent = 0;        // How many bytes we've sent so far
+    ssize_t bytes_left = *length;  // How many bytes we have left to send
     ssize_t n;
 
     const char *ptr = (const char *)buffer;
-
+    n = 0;
     while (total_sent < *length) {
         // MSG_NOSIGNAL prevents the process from crashing with SIGPIPE 
         // if the remote side closed the connection.
@@ -140,6 +140,9 @@ static void *cpc_to_socket(void *arg)
     }
     if (nb_bytes > 0) {
       int rc = send_all(a->socket_fd, cpc_tx_buf, &nb_bytes);
+      if (verbose && rc < 0) {
+      	fprintf(stderr, "BRIDGE: tcp error occurred\n");
+       }
     }
     //if (rc != 0) break;
   }
